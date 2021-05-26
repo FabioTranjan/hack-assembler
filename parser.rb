@@ -1,9 +1,7 @@
+require './constants'
+
 # Class that parses each line, breaking each command to be decoded later
 class Parser
-  A_SYMBOL = '@'
-  C_SYMBOL = '='
-  JMP_SYMBOL = ';'
-
   def initialize(file)
     @file = File.open(file, 'r')
   end
@@ -29,6 +27,10 @@ class Parser
 
   def parse_c_instruction(line)
     return unless line.include?(C_SYMBOL) || line.include?(JMP_SYMBOL)
-    line.strip.split(/=|;/)
+    if line.include?(C_SYMBOL)
+      return line.strip.split(/=/).push('')
+    else
+      return line.strip.split(/;/).unshift('')
+    end
   end
 end

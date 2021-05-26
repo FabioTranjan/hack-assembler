@@ -32,31 +32,31 @@ describe Parser do
 
     context "when parsing a line without jump instruction" do
       it "returns a separated array with dest and comp" do
-        expect(@parser.parse_c_instruction('MD=D+1')).to eq ['MD', 'D+1']
+        expect(@parser.parse_c_instruction('MD=D+1')).to eq ['MD', 'D+1', '']
       end
     end
 
     context "when parsing a line with jump instruction" do
       it "returns a separated array with dest, comp and jump" do
-        expect(@parser.parse_c_instruction('MD=D+1;JQE')).to eq ['MD', 'D+1', 'JQE']
+        expect(@parser.parse_c_instruction('D;JQE')).to eq ['', 'D', 'JQE']
       end
     end
   end
 
-  describe "#parse_c_instruction" do
+  describe "#parse" do
     before do
       @parser = Parser.new('./test.asm')
     end
 
-    context "when parsing a test file" do
+    context "when parsing a full test file" do
       it "returns each parsed content into an array" do
         expect(@parser.parse).to eq [
           ["@", "2"],
-          ["D", "A"],
+          ["D", "A", ""],
           ["@", "3"],
-          ["D", "D+A"],
+          ["D", "D+A", ""],
           ["@", "0"],
-          ["D", "JQE"]
+          ["M", "D", ""]
         ]
       end
     end
