@@ -5,4 +5,4 @@
 - For more info go to: https://www.nand2tetris.org/
 
 ## How to Use
-- Run the script: `ruby assembler.rb input.file output.file`
+- Run the script: `ruby assembler.rb input.asm output.hack`
