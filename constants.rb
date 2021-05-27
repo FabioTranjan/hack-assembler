@@ -1,6 +1,8 @@
 A_SYMBOL = '@'
 C_SYMBOL = '='
 JMP_SYMBOL = ';'
+COMMENT_SYMBOL= '//'
+NEW_LINE = '\r\n'
 
 COMP_TABLE = {
   '0' => '0101010',
