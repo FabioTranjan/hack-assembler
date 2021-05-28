@@ -7,29 +7,6 @@ describe Symbolizer do
     @symbolizer = Symbolizer.new(@parser)
   end
 
-  describe "#has_alphabetic_char?" do
-    context "when uppercase alphabetic char is present" do
-      let(:line) { '@R0' }
-      it "returns true" do
-        expect(@symbolizer.has_alphabetic_char?(line)).to be_truthy
-      end
-    end
-
-    context "when lowercase alphabetic char is present" do
-      let(:line) { '@loop' }
-      it "returns true" do
-        expect(@symbolizer.has_alphabetic_char?(line)).to be_truthy
-      end
-    end
-
-    context "when alphabetic char is not present" do
-      let(:line) { '@21' }
-      it "returns nil" do
-        expect(@symbolizer.has_alphabetic_char?(line)).to be_falsey
-      end
-    end
-  end
-
   describe "#include_label" do
     let(:include_label) { @symbolizer.include_label(line, 4) }
 

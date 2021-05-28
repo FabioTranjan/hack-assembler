@@ -22,13 +22,7 @@ class Symbolizer
 
   def second_pass
     @parsed.each do |line|
-      try_symbol(line) if line.first == A_SYMBOL && has_alphabetic_char?(line)
-    end
-  end
-
-  def has_alphabetic_char?(line)
-    line.each_char.any? do
-      |c| ('a'..'z').cover?(c) || ('A'..'Z').cover?(c)
+      try_symbol(line) if line.first == A_SYMBOL && Helper.has_alphabetic_char?(line)
     end
   end
 

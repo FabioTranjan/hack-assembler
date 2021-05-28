@@ -22,7 +22,7 @@ class Decoder
   end
 
   def decode_a_instruction(line)
-    '0' + Helper.to_binary_16(line.last)
+    Helper.to_binary_16(line.last)
   end
 
   def decode_c_instruction(line)
