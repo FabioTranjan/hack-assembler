@@ -1,0 +1,15 @@
+@i
+@sum
+(LOOP)
+@i
+@R0
+@STOP
+@i
+@sum
+@i
+@LOOP
+(STOP)
+@sum
+@R1
+(END)
+@END

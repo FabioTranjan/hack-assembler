@@ -1,3 +1,4 @@
+require './helper'
 require './constants'
 
 # Class that decodes each line to machine code (binary format)
@@ -21,7 +22,7 @@ class Decoder
   end
 
   def decode_a_instruction(line)
-    '0' + line.last.to_i.to_s(2).rjust(15, '0')
+    '0' + Helper.to_binary_16(line.last)
   end
 
   def decode_c_instruction(line)
