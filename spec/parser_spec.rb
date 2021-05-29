@@ -3,7 +3,7 @@ require './parser'
 describe Parser do
   describe "#parse_a_instruction" do
     before do
-      @parser = Parser.new('./test.asm')
+      @parser = Parser.new('./fixtures/test.asm')
     end
 
     context "when parsing a line without @ symbol" do
@@ -14,14 +14,14 @@ describe Parser do
 
     context "when parsing a line with @ symbol" do
       it "returns a separated array with symbol and number" do
-        expect(@parser.parse_a_instruction('@abc')).to eq ['@', 'abc']
+        expect(@parser.parse_a_instruction('@abc')).to eq '@abc'
       end
     end
   end
 
   describe "#parse_c_instruction" do
     before do
-      @parser = Parser.new('./test.asm')
+      @parser = Parser.new('./fixtures/test.asm')
     end
 
     context "when parsing a line without any instruction" do
@@ -45,17 +45,17 @@ describe Parser do
 
   describe "#parse" do
     before do
-      @parser = Parser.new('./test.asm')
+      @parser = Parser.new('./fixtures/test.asm')
     end
 
     context "when parsing a full test file" do
       it "returns each parsed content into an array" do
         expect(@parser.parse).to eq [
-          ["@", "2"],
+          "@2",
           ["D", "A", ""],
-          ["@", "3"],
+          "@3",
           ["D", "D+A", ""],
-          ["@", "0"],
+          "@0",
           ["M", "D", ""]
         ]
       end

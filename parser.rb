@@ -23,8 +23,7 @@ class Parser
   end
 
   def parse_a_instruction(line)
-    return unless line.include?(A_SYMBOL)
-    line.strip.split(/(?<=[@])/)
+    return line.strip if line.include?(A_SYMBOL)
   end
 
   def parse_c_instruction(line)
