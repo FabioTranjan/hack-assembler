@@ -7,16 +7,18 @@ class Symbolizer
     @parsed = parsed
     @symbols = PREDEFINED_SYMBOLS.clone
     @last_memory = 16
+    @parsed_symbols = 0
   end
 
   def symbolize
     first_pass
     second_pass
+    @parsed
   end
 
   def first_pass
     @parsed.each_with_index do |line, index|
-      include_label(line, index) if line[0] == '(' && line[-1] == ')'
+      include_label(line, index) if line.include?('(') && line.include?(')')
     end
   end
 
@@ -28,7 +30,9 @@ class Symbolizer
 
   def include_label(line, index)
     symbol = line[1..-2]
-    @symbols[symbol] = Helper.to_binary_16(index)
+    @symbols[symbol] = Helper.to_binary_16(index - @parsed_symbols)
+    @parsed = @parsed - [line]
+    @parsed_symbols = @parsed_symbols + 1
   end
 
   def try_symbol(line)
@@ -38,7 +42,6 @@ class Symbolizer
 
     @symbols[symbol] = Helper.to_binary_16(@last_memory)
     @last_memory = @last_memory + 1
-    @symbols
   end
 
   def symbols

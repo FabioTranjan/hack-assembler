@@ -12,6 +12,8 @@ class Parser
     @file.each_line do |line|
       next if line.include?(COMMENT_SYMBOL) || line == NEW_LINE
 
+      parsed << line.strip if line.include?('(') && line.include?(')')
+
       parsed_a = parse_a_instruction(line)
       parsed << parsed_a if parsed_a
 

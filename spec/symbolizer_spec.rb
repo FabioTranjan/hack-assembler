@@ -2,7 +2,7 @@ require './parser'
 require './symbolizer'
 
 describe Symbolizer do
-  let(:parsed) { Parser.new('./symbols.asm') }
+  let(:parsed) { [] }
 
   before do
     @symbolizer = Symbolizer.new(parsed)
@@ -55,7 +55,7 @@ describe Symbolizer do
     context "when doing a first pass" do
       it "includes the label symbols" do
         expect(@symbolizer.symbols['LOOP']).to eq '0000000000000001'
-        expect(@symbolizer.symbols['STOP']).to eq '0000000000000100'
+        expect(@symbolizer.symbols['STOP']).to eq '0000000000000011'
       end
 
       it "includes only two symbols more than predefined" do
