@@ -5,7 +5,7 @@ require './constants'
 class Symbolizer
   def initialize(parsed)
     @parsed = parsed
-    @symbols = PREDEFINED_SYMBOLS
+    @symbols = PREDEFINED_SYMBOLS.clone
     @last_memory = 16
   end
 
@@ -15,14 +15,14 @@ class Symbolizer
   end
 
   def first_pass
-    @parsed.each do |line, index|
-      include_label(line, index) if line.first == '(' && line.last == ')'
+    @parsed.each_with_index do |line, index|
+      include_label(line, index) if line[0] == '(' && line[-1] == ')'
     end
   end
 
   def second_pass
     @parsed.each do |line|
-      try_symbol(line) if line.first == A_SYMBOL && Helper.has_alphabetic_char?(line)
+      try_symbol(line) if line[0] == A_SYMBOL && Helper.has_alphabetic_char?(line)
     end
   end
 
@@ -38,6 +38,7 @@ class Symbolizer
 
     @symbols[symbol] = Helper.to_binary_16(@last_memory)
     @last_memory = @last_memory + 1
+    @symbols
   end
 
   def symbols
