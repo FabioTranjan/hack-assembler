@@ -46,7 +46,7 @@ describe Symbolizer do
   end
 
   describe "#first_pass" do
-    let(:parsed) { ['@i', '(LOOP)', 'LOOP', 'STOP', '(STOP)'] }
+    let(:parsed) { ['@i', '(LOOP)', '@LOOP', '@STOP', '(STOP)'] }
 
     before do
       @symbolizer.first_pass
@@ -65,7 +65,7 @@ describe Symbolizer do
   end
 
   describe "#second_pass" do
-    let(:parsed) { ['@i', '(LOOP)', 'LOOP', '@x', 'i', 'STOP', '(STOP)', 'x'] }
+    let(:parsed) { ['@i', '(LOOP)', '@x', 'i', '(STOP)', 'x'] }
 
     before do
       @symbolizer.second_pass
