@@ -1,5 +1,6 @@
 require './parser'
 require './decoder'
+require './symbolizer'
 
 class Assembler
   def initialize(input_file)
@@ -8,7 +9,9 @@ class Assembler
 
   def assembly(output_file)
     parsed = Parser.new(@input_file).parse
-    decoded = Decoder.new(parsed).decode
+    symbolizer = Symbolizer.new(parsed)
+    parsed = symbolizer.symbolize
+    decoded = Decoder.new(parsed, symbolizer.symbols).decode
 
     file = File.open(output_file, 'w')
     decoded.each do |line|

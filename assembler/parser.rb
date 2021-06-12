@@ -10,9 +10,11 @@ class Parser
     parsed = []
 
     @file.each_line do |line|
-      next if line.include?(COMMENT_SYMBOL) || line == NEW_LINE
+      next if line[0..1] == COMMENT_SYMBOL || line == NEW_LINE
+      line = line.strip.split(' ').first
+      next unless line
 
-      parsed << line.strip if line.include?('(') && line.include?(')')
+      parsed << line if line.include?('(') && line.include?(')')
 
       parsed_a = parse_a_instruction(line)
       parsed << parsed_a if parsed_a

@@ -24,6 +24,7 @@ class Symbolizer
 
   def second_pass
     @parsed.each do |line|
+      p line
       try_symbol(line) if line[0] == A_SYMBOL && Helper.has_alphabetic_char?(line)
     end
   end
