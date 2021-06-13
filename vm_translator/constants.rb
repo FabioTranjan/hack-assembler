@@ -1,11 +1,11 @@
-OPERATIONS = [
-  'C_ARITHMETIC',
-  'C_PUSH',
-  'C_POP',
-  'C_LABEL',
-  'C_GOTO',
-  'C_IF',
-  'C_FUNCTION',
-  'C_RETURN',
-  'C_CALL'
-]
+OPERATIONS = {
+  arithmetic: 'C_ARITHMETIC',
+  push: 'C_PUSH',
+  pop: 'C_POP',
+  label: 'C_LABEL',
+  goto: 'C_GOTO',
+  if: 'C_IF',
+  function: 'C_FUNCTION',
+  return: 'C_RETURN',
+  call: 'C_CALL'
+}
