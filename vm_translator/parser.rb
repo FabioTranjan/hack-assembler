@@ -25,11 +25,13 @@ class Parser
   end
 
   def command_type
+    return if operation == 'C_RETURN'
+    return OPERATIONS[:arithmetic] if ARITHMETIC.include?(current[0])
+
     operation
   end
 
   def arg1
-    return if operation == 'C_RETURN'
     return current[0] if operation == 'C_ARITHMETIC'
 
     operation[1]
@@ -42,13 +44,10 @@ class Parser
   private
 
   def operation
-    operation = OPERATIONS[current[0].to_sym]
-    return OPERATIONS[:arithmetic] unless opeartion
-
-    operation
+    OPERATIONS[current[0].to_sym]
   end
 
   def current
-    @read_lines[current_line]
+    @read_lines[@current_line]
   end
 end

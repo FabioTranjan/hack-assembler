@@ -9,3 +9,15 @@ OPERATIONS = {
   return: 'C_RETURN',
   call: 'C_CALL'
 }
+
+ARITHMETIC = [
+  'add',
+  'sub',
+  'neg',
+  'eq',
+  'gt',
+  'lt',
+  'and',
+  'or',
+  'not'
+]
