@@ -1,31 +1,28 @@
 # Class that generates asssembly code from the parsed VM commands
 class CodeWriter
-  def initialize(parsed, filename)
-    @parsed = parsed
+  def initialize(filename)
     @filename = filename
     initialize_output
   end
 
   def write_arithmetic(command)
+    @file.puts "// #{command}"
     case command
-    when 'C_ADD'
+    when 'add'
       write_add
     end
   end
 
   def write_push_pop(command, segment, index)
+    @file.puts "// #{command}"
     case command
     when 'C_PUSH'
-      write_push
+      write_push(segment, index)
     end
   end
 
   def close
     @file.close
-  end
-
-  def file
-    @file
   end
 
   private
@@ -63,6 +60,6 @@ class CodeWriter
   def initialize_output
     prefix = @filename.split('.')[0]
     output = prefix + '.asm'
-    @file = File.open(output, 'r+')
+    @file = File.open(output, 'w+')
   end
 end

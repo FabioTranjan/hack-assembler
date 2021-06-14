@@ -5,6 +5,8 @@ class Parser
   def initialize(filename)
     @read_lines = []
     File.open(filename, 'r').each_line do |line|
+      next if line == NEW_LINE
+      next if line.include?(COMMAND)
       @read_lines << parse(line)
     end
     @current_line = 0

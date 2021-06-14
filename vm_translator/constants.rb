@@ -1,3 +1,6 @@
+NEW_LINE = '\r\n'
+COMMAND = '//'
+
 OPERATIONS = {
   arithmetic: 'C_ARITHMETIC',
   push: 'C_PUSH',
