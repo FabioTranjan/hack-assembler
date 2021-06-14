@@ -46,6 +46,8 @@ class CodeWriter
 
   def write_add
     @file.puts '@SP'
+    @file.puts 'M=M-1'
+    @file.puts '@SP'
     @file.puts 'A=M'
     @file.puts 'D=M'
     @file.puts '@SP'
@@ -55,6 +57,8 @@ class CodeWriter
     @file.puts '@SP'
     @file.puts 'A=M'
     @file.puts 'M=D'
+    @file.puts '@SP'
+    @file.puts 'M=M+1'
   end
 
   def initialize_output
