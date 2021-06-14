@@ -1,4 +1,4 @@
-NEW_LINE = '\r\n'
+NEW_LINE = "\r\n"
 COMMAND = '//'
 
 OPERATIONS = {
