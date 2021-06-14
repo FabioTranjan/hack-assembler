@@ -21,3 +21,10 @@ ARITHMETIC = [
   'or',
   'not'
 ]
+
+ARG_COMMANDS = [
+  'push',
+  'pop',
+  'function',
+  'call'
+]

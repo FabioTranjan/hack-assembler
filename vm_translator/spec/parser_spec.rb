@@ -59,7 +59,7 @@ describe Parser do
         @parser.advance
       end
 
-      it "returns the command itself" do
+      it "returns an arithmetic command" do
 	      expect(@parser.command_type).to eq 'C_ARITHMETIC'
       end
     end
@@ -71,14 +71,88 @@ describe Parser do
         @parser.advance
       end
 
-      it "returns nil" do
-	      expect(@parser.command_type).to eq nil
+      it "returns C_RETURN" do
+	      expect(@parser.command_type).to eq 'C_RETURN'
       end
     end
 
-    context "when the commands isn't arithmetic nor return" do
-      it "returns the first argument of the command" do
+    context "when the commands is push" do
+      it "returns the current command" do
 	      expect(@parser.command_type).to eq 'C_PUSH'
+      end
+    end
+  end
+
+  describe ".arg1" do
+    let(:filename) { './fixtures/add.vm' }
+
+    before do
+      @parser = Parser.new(filename)
+    end
+
+    context "when the command is arithmetic" do
+      before do
+        @parser.advance
+        @parser.advance
+      end
+
+      it "returns the command itself" do
+	      expect(@parser.arg1).to eq 'add'
+      end
+    end
+
+    context "when the command is return" do
+      before do
+        @parser.advance
+        @parser.advance
+        @parser.advance
+      end
+
+      it "returns nil" do
+	      expect(@parser.arg1).to eq nil
+      end
+    end
+
+    context "when the commands is push" do
+      it "returns the first argument of the command" do
+	      expect(@parser.arg1).to eq 'constant'
+      end
+    end
+  end
+
+  describe ".arg2" do
+    let(:filename) { './fixtures/add.vm' }
+
+    before do
+      @parser = Parser.new(filename)
+    end
+
+    context "when the command is arithmetic" do
+      before do
+        @parser.advance
+        @parser.advance
+      end
+
+      it "returns nil" do
+	      expect(@parser.arg2).to eq nil
+      end
+    end
+
+    context "when the command is return" do
+      before do
+        @parser.advance
+        @parser.advance
+        @parser.advance
+      end
+
+      it "returns nil" do
+	      expect(@parser.arg2).to eq nil
+      end
+    end
+
+    context "when the command is push" do
+      it "returns the second argument of the command" do
+	      expect(@parser.arg2).to eq '1'
       end
     end
   end

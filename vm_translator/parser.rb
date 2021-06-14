@@ -25,20 +25,22 @@ class Parser
   end
 
   def command_type
-    return if operation == 'C_RETURN'
     return OPERATIONS[:arithmetic] if ARITHMETIC.include?(current[0])
 
     operation
   end
 
   def arg1
-    return current[0] if operation == 'C_ARITHMETIC'
+    return if current[0] == 'return'
+    return current[0] if ARITHMETIC.include?(current[0])
 
-    operation[1]
+    current[1]
   end
 
   def arg2
-    operation[2]
+    return unless ARG_COMMANDS.include?(current[0])
+
+    current[2]
   end
 
   private
