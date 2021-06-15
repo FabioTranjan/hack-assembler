@@ -38,6 +38,8 @@ class CodeWriter
     case command
     when 'C_PUSH'
       write_push(segment, index)
+    when 'C_POP'
+      write_pop(segment, index)
     end
   end
 
@@ -51,6 +53,31 @@ class CodeWriter
     case segment
     when 'constant'
       write_push_constant(index)
+    when 'local'
+      write_push_segment('LCL', index)
+    when 'argument'
+      write_push_segment('ARG', index)
+    when 'this'
+      write_push_segment('THIS', index)
+    when 'that'
+      write_push_segment('THAT', index)
+    when 'temp'
+      write_push_segment(5, index)
+    end
+  end
+
+  def write_pop(segment, index)
+    case segment
+    when 'local'
+      write_pop_segment('LCL', index)
+    when 'argument'
+      write_pop_segment('ARG', index)
+    when 'this'
+      write_pop_segment('THIS', index)
+    when 'that'
+      write_pop_segment('THAT', index)
+    when 'temp'
+      write_pop_segment(5, index)
     end
   end
 
@@ -62,6 +89,38 @@ class CodeWriter
     @file.puts 'M=D'
     @file.puts '@SP'
     @file.puts 'M=M+1'
+  end
+
+  def write_push_segment(segment, index)
+    @file.puts "@#{index}"
+    @file.puts "D=A"
+    @file.puts "@#{segment}"
+    @file.puts 'D=D+M' unless segment.is_a? Integer
+    @file.puts 'D=D+A' if segment.is_a? Integer
+    @file.puts "A=D"
+    @file.puts "D=M"
+    @file.puts "@SP"
+    @file.puts 'A=M'
+    @file.puts 'M=D'
+    @file.puts "@SP"
+    @file.puts 'M=M+1'
+  end
+
+  def write_pop_segment(segment, index)
+    @file.puts "@#{index}"
+    @file.puts "D=A"
+    @file.puts "@#{segment}"
+    @file.puts 'D=D+M' unless segment.is_a? Integer
+    @file.puts 'D=D+A' if segment.is_a? Integer
+    @file.puts '@5'
+    @file.puts 'M=D'
+    @file.puts '@SP'
+    @file.puts 'M=M-1'
+    @file.puts 'A=M'
+    @file.puts 'D=M'
+    @file.puts '@5'
+    @file.puts 'A=M'
+    @file.puts 'M=D'
   end
 
   def write_cmp(cmp)
