@@ -10,7 +10,17 @@ class CodeWriter
     @file.puts "// #{command}"
     case command
     when 'add'
-      write_add
+      write_op_two('+')
+    when 'sub'
+      write_op_two('-')
+    when 'neg'
+      write_op_one('-')
+    when 'and'
+      write_op_two('&')
+    when 'or'
+      write_op_two('|')
+    when 'not'
+      write_op_one('!')
     when 'eq'
       write_cmp('JEQ')
       @jmp_inc += 1
@@ -80,7 +90,7 @@ class CodeWriter
     @file.puts 'M=M+1'
   end
 
-  def write_add
+  def write_op_two(op)
     @file.puts '@SP'
     @file.puts 'M=M-1'
     @file.puts '@SP'
@@ -89,10 +99,20 @@ class CodeWriter
     @file.puts '@SP'
     @file.puts 'M=M-1'
     @file.puts 'A=M'
-    @file.puts 'D=D+M'
+    @file.puts "D=M#{op}D"
     @file.puts '@SP'
     @file.puts 'A=M'
     @file.puts 'M=D'
+    @file.puts '@SP'
+    @file.puts 'M=M+1'
+  end
+
+  def write_op_one(op)
+    @file.puts '@SP'
+    @file.puts 'M=M-1'
+    @file.puts '@SP'
+    @file.puts 'A=M'
+    @file.puts "M=#{op}M"
     @file.puts '@SP'
     @file.puts 'M=M+1'
   end
