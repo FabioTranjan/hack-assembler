@@ -65,6 +65,8 @@ class CodeWriter
       write_push_segment(5, index)
     when 'pointer'
       write_push_pointer(index)
+    when 'static'
+      write_push_static(index)
     end
   end
 
@@ -82,6 +84,8 @@ class CodeWriter
       write_pop_segment(5, index)
     when 'pointer'
       write_pop_pointer(index)
+    when 'static'
+      write_pop_static(index)
     end
   end
 
@@ -133,6 +137,26 @@ class CodeWriter
     @file.puts "D=M"
     @file.puts "@#{segment}"
     @file.puts "M=D"
+  end
+
+   def write_pop_static(index)
+    @file.puts "@SP"
+    @file.puts 'M=M-1'
+    @file.puts "@SP"
+    @file.puts 'A=M'
+    @file.puts 'D=M'
+    @file.puts "@Foo.#{index}"
+    @file.puts 'M=D'
+  end
+
+  def write_push_static(index)
+    @file.puts "@Foo.#{index}"
+    @file.puts 'D=M'
+    @file.puts "@SP"
+    @file.puts 'A=M'
+    @file.puts 'M=D'
+    @file.puts "@SP"
+    @file.puts 'M=M+1'
   end
 
   def write_pop_segment(segment, index)
