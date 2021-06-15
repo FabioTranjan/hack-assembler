@@ -2,6 +2,7 @@
 class CodeWriter
   def initialize(filename)
     @filename = filename
+    @jmp_inc = 0
     initialize_output
   end
 
@@ -10,11 +11,20 @@ class CodeWriter
     case command
     when 'add'
       write_add
+    when 'eq'
+      write_cmp('JEQ')
+      @jmp_inc += 1
+    when 'lt'
+      write_cmp('JLT')
+      @jmp_inc += 1
+    when 'gt'
+      write_cmp('JGT')
+      @jmp_inc += 1
     end
   end
 
   def write_push_pop(command, segment, index)
-    @file.puts "// #{command}"
+    @file.puts "// #{command} #{segment} #{index}"
     case command
     when 'C_PUSH'
       write_push(segment, index)
@@ -40,6 +50,32 @@ class CodeWriter
     @file.puts '@SP'
     @file.puts 'A=M'
     @file.puts 'M=D'
+    @file.puts '@SP'
+    @file.puts 'M=M+1'
+  end
+
+  def write_cmp(cmp)
+    @file.puts '@SP'
+    @file.puts 'M=M-1'
+    @file.puts '@SP'
+    @file.puts 'A=M'
+    @file.puts 'D=M'
+    @file.puts '@SP'
+    @file.puts 'M=M-1'
+    @file.puts 'A=M'
+    @file.puts 'D=M-D'
+    @file.puts "@TRUE_#{@jmp_inc}"
+    @file.puts "D;#{cmp}"
+    @file.puts '@SP'
+    @file.puts 'A=M'
+    @file.puts "M=0"
+    @file.puts "@OUT_#{@jmp_inc}"
+    @file.puts "0;JEQ"
+    @file.puts "(TRUE_#{@jmp_inc})"
+    @file.puts '@SP'
+    @file.puts 'A=M'
+    @file.puts "M=-1"
+    @file.puts "(OUT_#{@jmp_inc})"
     @file.puts '@SP'
     @file.puts 'M=M+1'
   end
