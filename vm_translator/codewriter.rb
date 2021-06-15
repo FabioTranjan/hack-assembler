@@ -63,6 +63,8 @@ class CodeWriter
       write_push_segment('THAT', index)
     when 'temp'
       write_push_segment(5, index)
+    when 'pointer'
+      write_push_pointer(index)
     end
   end
 
@@ -78,6 +80,8 @@ class CodeWriter
       write_pop_segment('THAT', index)
     when 'temp'
       write_pop_segment(5, index)
+    when 'pointer'
+      write_pop_pointer(index)
     end
   end
 
@@ -104,6 +108,31 @@ class CodeWriter
     @file.puts 'M=D'
     @file.puts "@SP"
     @file.puts 'M=M+1'
+  end
+
+  def write_push_pointer(index)
+    segment = 'THIS' if index == '0'
+    segment = 'THAT' if index == '1'
+
+    @file.puts "@#{segment}"
+    @file.puts "D=M"
+    @file.puts "@SP"
+    @file.puts "A=M"
+    @file.puts "M=D"
+    @file.puts "@SP"
+    @file.puts "M=M+1"
+  end
+
+  def write_pop_pointer(index)
+    segment = 'THIS' if index == '0'
+    segment = 'THAT' if index == '1'
+
+    @file.puts "@SP"
+    @file.puts "M=M-1"
+    @file.puts "A=M"
+    @file.puts "D=M"
+    @file.puts "@#{segment}"
+    @file.puts "M=D"
   end
 
   def write_pop_segment(segment, index)
