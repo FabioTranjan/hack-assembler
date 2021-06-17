@@ -18,6 +18,12 @@ class Translator
     @parsed.each do |command, segment, index|
       if command == OPERATIONS[:arithmetic]
   	    @codewriter.write_arithmetic(segment)
+      elsif command == OPERATIONS[:label]
+  	    @codewriter.write_label(command, segment)
+      elsif command == OPERATIONS[:goto]
+  	    @codewriter.write_goto(command, segment)
+      elsif command == OPERATIONS["if-goto".to_sym]
+  	    @codewriter.write_if(command, segment)
       else
   	    @codewriter.write_push_pop(command, segment, index)
       end
