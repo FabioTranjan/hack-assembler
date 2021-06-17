@@ -90,7 +90,7 @@ describe Parser do
       end
     end
 
-    context "when the command is if-goto" do
+    context "when the command is goto" do
       before do
         @parser.advance
         @parser.advance
@@ -98,8 +98,8 @@ describe Parser do
         @parser.advance
       end
 
-      it "returns C_IF" do
-	      expect(@parser.command_type).to eq 'C_IF'
+      it "returns C_GOTO" do
+	      expect(@parser.command_type).to eq 'C_GOTO'
       end
     end
 
@@ -154,7 +154,7 @@ describe Parser do
       end
     end
 
-    context "when the command is if-goto" do
+    context "when the command is goto" do
       before do
         @parser.advance
         @parser.advance
@@ -216,7 +216,7 @@ describe Parser do
       end
     end
 
-    context "when the command is if-goto" do
+    context "when the command is goto" do
       before do
         @parser.advance
         @parser.advance

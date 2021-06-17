@@ -7,7 +7,7 @@ class CodeWriter
   end
 
   def write_arithmetic(command)
-    @file.puts "// #{command}"
+    log(command)
     case command
     when 'add'
       write_op_two('+')
@@ -34,7 +34,7 @@ class CodeWriter
   end
 
   def write_push_pop(command, segment, index)
-    @file.puts "// #{command} #{segment} #{index}"
+    log(command, segment, index)
     case command
     when 'C_PUSH'
       write_push(segment, index)
@@ -43,11 +43,32 @@ class CodeWriter
     end
   end
 
+  def write_label(command, segment)
+    log(command, segment)
+    case command
+    when 'C_LABEL'
+      @file.puts "(#{segment})"
+    end
+  end
+
+  def write_goto(command, segment)
+    log(command, segment)
+    case command
+    when 'C_GOTO'
+      @file.puts "@#{segment}"
+      @file.puts "0;JEQ"
+    end
+  end
+
   def close
     @file.close
   end
 
   private
+
+  def log(command, segment = nil, index = nil)
+    @file.puts "// #{command} #{segment} #{index}".strip
+  end
 
   def write_push(segment, index)
     case segment

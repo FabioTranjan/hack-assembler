@@ -2,5 +2,5 @@ push constant 1
 push constant 2
 add
 label LOOP_START
-if-goto LOOP_START
+goto LOOP_START
 return
