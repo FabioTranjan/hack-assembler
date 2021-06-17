@@ -6,16 +6,16 @@ describe Parser do
       @parser = Parser.new(filename)
     end
 
-    context "when there are more commands" do
+    context "when there are arithmetic commands" do
       let(:filename) { './fixtures/add.vm' }
 
       it "returns true" do
-	@parser.advance
+	      @parser.advance
         expect(@parser.has_more_commands).to eq true
       end
     end
 
-    context "when there aren't more commands" do
+    context "when there are no commands" do
       let(:filename) { './fixtures/empty.vm' }
 
       it "returns false" do
@@ -29,19 +29,19 @@ describe Parser do
       @parser = Parser.new(filename)
     end
 
-    context "when there are more commands" do
+    context "when there arithmethic commands" do
       let(:filename) { './fixtures/add.vm' }
 
       it "advances the current line" do
-	expect(@parser.advance).to eq 1
+	      expect(@parser.advance).to eq 1
       end
     end
 
-    context "when there aren't more commands" do
+    context "when there no commands" do
       let(:filename) { './fixtures/empty.vm' }
 
       it "does not advance the current line" do
-	expect(@parser.advance).to eq 0
+	      expect(@parser.advance).to eq 0
       end
     end
   end
@@ -69,10 +69,37 @@ describe Parser do
         @parser.advance
         @parser.advance
         @parser.advance
+        @parser.advance
+        @parser.advance
       end
 
       it "returns C_RETURN" do
 	      expect(@parser.command_type).to eq 'C_RETURN'
+      end
+    end
+
+    context "when the command is label" do
+      before do
+        @parser.advance
+        @parser.advance
+        @parser.advance
+      end
+
+      it "returns C_LABEL" do
+	      expect(@parser.command_type).to eq 'C_LABEL'
+      end
+    end
+
+    context "when the command is if-goto" do
+      before do
+        @parser.advance
+        @parser.advance
+        @parser.advance
+        @parser.advance
+      end
+
+      it "returns C_IF" do
+	      expect(@parser.command_type).to eq 'C_IF'
       end
     end
 
@@ -106,10 +133,37 @@ describe Parser do
         @parser.advance
         @parser.advance
         @parser.advance
+        @parser.advance
+        @parser.advance
       end
 
       it "returns nil" do
 	      expect(@parser.arg1).to eq nil
+      end
+    end
+
+    context "when the command is label" do
+      before do
+        @parser.advance
+        @parser.advance
+        @parser.advance
+      end
+
+      it "returns LOOP_START" do
+	      expect(@parser.arg1).to eq 'LOOP_START'
+      end
+    end
+
+    context "when the command is if-goto" do
+      before do
+        @parser.advance
+        @parser.advance
+        @parser.advance
+        @parser.advance
+      end
+
+      it "returns LOOP_START" do
+	      expect(@parser.arg1).to eq 'LOOP_START'
       end
     end
 
@@ -146,6 +200,31 @@ describe Parser do
       end
 
       it "returns nil" do
+	      expect(@parser.arg2).to eq nil
+      end
+    end
+
+    context "when the command is label" do
+      before do
+        @parser.advance
+        @parser.advance
+        @parser.advance
+      end
+
+      it "returns LOOP_START" do
+	      expect(@parser.arg2).to eq nil
+      end
+    end
+
+    context "when the command is if-goto" do
+      before do
+        @parser.advance
+        @parser.advance
+        @parser.advance
+        @parser.advance
+      end
+
+      it "returns LOOP_START" do
 	      expect(@parser.arg2).to eq nil
       end
     end

@@ -17,9 +17,9 @@ class Translator
 
     @parsed.each do |command, segment, index|
       if command == OPERATIONS[:arithmetic]
-	@codewriter.write_arithmetic(segment)
+  	    @codewriter.write_arithmetic(segment)
       else
-	@codewriter.write_push_pop(command, segment, index)
+  	    @codewriter.write_push_pop(command, segment, index)
       end
     end
 
