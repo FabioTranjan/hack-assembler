@@ -60,6 +60,19 @@ class CodeWriter
     end
   end
 
+  def write_if(command, segment)
+    log(command, segment)
+    case command
+    when 'C_IF'
+      @file.puts "@SP"
+      @file.puts "M=M-1"
+      @file.puts "A=M"
+      @file.puts "D=M"
+      @file.puts "@#{segment}"
+      @file.puts "D;JGT"
+    end
+  end
+
   def close
     @file.close
   end
