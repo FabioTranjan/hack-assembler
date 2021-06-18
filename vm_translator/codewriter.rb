@@ -45,33 +45,105 @@ class CodeWriter
 
   def write_label(command, segment)
     log(command, segment)
-    case command
-    when 'C_LABEL'
-      @file.puts "(#{segment})"
-    end
+    @file.puts "(#{segment})"
   end
 
   def write_goto(command, segment)
     log(command, segment)
-    case command
-    when 'C_GOTO'
-      @file.puts "@#{segment}"
-      @file.puts "0;JEQ"
-    end
+    @file.puts "@#{segment}"
+    @file.puts "0;JEQ"
   end
 
   def write_if(command, segment)
     log(command, segment)
-    case command
-    when 'C_IF'
-      @file.puts "@SP"
-      @file.puts "M=M-1"
-      @file.puts "A=M"
-      @file.puts "D=M"
-      @file.puts "@#{segment}"
-      @file.puts "D;JGT"
-    end
+    @file.puts "@SP"
+    @file.puts "M=M-1"
+    @file.puts "A=M"
+    @file.puts "D=M"
+    @file.puts "@#{segment}"
+    @file.puts "D;JGT"
   end
+
+  def write_function(command, segment, index)
+    log(command, segment, index)
+    @file.puts "@#{index}"
+    @file.puts "D=A"
+    @file.puts "@5"
+    @file.puts "M=D"
+    @file.puts "(#{segment})"
+    @file.puts "@0"
+    @file.puts "D=A"
+    @file.puts "@SP"
+    @file.puts "A=M"
+    @file.puts "M=D"
+    @file.puts "@SP"
+    @file.puts "M=M+1"
+    @file.puts "@5"
+    @file.puts "M=M-1"
+    @file.puts "D=M"
+    @file.puts "@#{segment}"
+    @file.puts "D;JNE"
+  end
+
+  def write_return(command, segment)
+    log(command, segment)
+    @file.puts "@LCL"
+    @file.puts "D=M"
+    @file.puts "@5"
+    @file.puts "M=D"
+    @file.puts "@6"
+    @file.puts "M=D"
+    @file.puts "@5"
+    @file.puts "D=A"
+    @file.puts "@6"
+    @file.puts "A=M-D"
+    @file.puts "D=M"
+    @file.puts "@6"
+    @file.puts "M=D"
+    @file.puts "@SP"
+    @file.puts "M=M-1"
+    @file.puts "A=M"
+    @file.puts "D=M"
+    @file.puts "@ARG"
+    @file.puts "A=M"
+    @file.puts "M=D"
+    @file.puts "D=A"
+    @file.puts "@SP"
+    @file.puts "M=D"
+    @file.puts "M=M+1"
+    @file.puts "@1"
+    @file.puts "D=A"
+    @file.puts "@5"
+    @file.puts "A=M-D"
+    @file.puts "D=M"
+    @file.puts "@THAT"
+    @file.puts "M=D"
+    @file.puts "@2"
+    @file.puts "D=A"
+    @file.puts "@5"
+    @file.puts "A=M-D"
+    @file.puts "D=M"
+    @file.puts "@THIS"
+    @file.puts "M=D"
+    @file.puts "@3"
+    @file.puts "D=A"
+    @file.puts "@5"
+    @file.puts "A=M-D"
+    @file.puts "D=M"
+    @file.puts "@ARG"
+    @file.puts "M=D"
+    @file.puts "@4"
+    @file.puts "D=A"
+    @file.puts "@5"
+    @file.puts "A=M-D"
+    @file.puts "D=M"
+    @file.puts "@LCL"
+    @file.puts "M=D"
+    @file.puts "@6"
+    @file.puts "A=M"
+    @file.puts "0;JEQ"
+  end
+
 
   def close
     @file.close

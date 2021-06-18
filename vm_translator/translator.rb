@@ -24,6 +24,10 @@ class Translator
   	    @codewriter.write_goto(command, segment)
       elsif command == OPERATIONS["if-goto".to_sym]
   	    @codewriter.write_if(command, segment)
+      elsif command == OPERATIONS[:function]
+  	    @codewriter.write_function(command, segment, index)
+      elsif command == OPERATIONS[:return]
+  	    @codewriter.write_return(command, segment)
       else
   	    @codewriter.write_push_pop(command, segment, index)
       end
