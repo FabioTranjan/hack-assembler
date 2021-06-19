@@ -59,14 +59,8 @@ class CodeWriter
 
   def write_goto(command, segment)
     log(command, segment)
-    @file.puts "@SP"
-    @file.puts "M=M-1"
-    @file.puts "A=M"
-    @file.puts "D=M"
     @file.puts "@#{segment}"
-    @file.puts "D;JEQ"
-    @file.puts "@SP"
-    @file.puts "M=M+1"
+    @file.puts "0;JEQ"
   end
 
   def write_if(command, segment)
@@ -81,11 +75,14 @@ class CodeWriter
 
   def write_function(command, segment, index)
     log(command, segment, index)
+    @file.puts "(#{segment})"
     @file.puts "@#{index}"
     @file.puts "D=A"
+    @file.puts "@#{segment}_out"
+    @file.puts "D;JEQ"
     @file.puts "@5"
     @file.puts "M=D"
-    @file.puts "(#{segment})"
+    @file.puts "(#{segment}_loop)"
     @file.puts "@0"
     @file.puts "D=A"
     @file.puts "@SP"
@@ -96,8 +93,9 @@ class CodeWriter
     @file.puts "@5"
     @file.puts "M=M-1"
     @file.puts "D=M"
-    @file.puts "@#{segment}"
+    @file.puts "@#{segment}_loop"
     @file.puts "D;JGT"
+    @file.puts "(#{segment}_out)"
   end
 
   def write_call(command, segment, index)
