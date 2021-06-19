@@ -43,6 +43,14 @@ class CodeWriter
     end
   end
 
+  def write_init
+    @file.puts "@256"
+    @file.puts "D=A"
+    @file.puts "@SP"
+    @file.puts "M=D"
+    write_call('C_CALL', 'Sys.init', 0)
+  end
+
   def write_label(command, segment)
     log(command, segment)
     @file.puts "(#{segment})"

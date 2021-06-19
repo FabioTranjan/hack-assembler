@@ -15,6 +15,8 @@ class Translator
       @parser.advance
     end
 
+    @codewriter.write_init
+
     @parsed.each do |command, segment, index|
       if command == OPERATIONS[:arithmetic]
   	    @codewriter.write_arithmetic(segment)
