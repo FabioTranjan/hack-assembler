@@ -44,6 +44,7 @@ class CodeWriter
   end
 
   def write_init
+    @file.puts "// Init bootstrap"
     @file.puts "@256"
     @file.puts "D=A"
     @file.puts "@SP"

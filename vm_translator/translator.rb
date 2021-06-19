@@ -4,15 +4,24 @@ require './codewriter'
 # Class that translates VM commands to machine code (ASM)
 class Translator
   def initialize(filename)
-    @parser = Parser.new(filename)
-    @codewriter = CodeWriter.new(filename)
+    @files = []
+    filenames = Dir.entries(ARGV[0]).select{ |file| file.include?('.vm') }
+    filenames.each do |filename|
+      @files << "#{ARGV[0]}#{filename}"
+    end
+
+    @codewriter = CodeWriter.new(ARGV[0] + 'output.asm')
   end
 
   def translate
     @parsed = []
-    while @parser.has_more_commands
-      @parsed << [@parser.command_type, @parser.arg1, @parser.arg2]
-      @parser.advance
+
+    @files.each do |filename|
+      @parser = Parser.new(filename)
+      while @parser.has_more_commands
+        @parsed << [@parser.command_type, @parser.arg1, @parser.arg2]
+        @parser.advance
+      end
     end
 
     @codewriter.write_init
