@@ -10,7 +10,8 @@ class Translator
       @files << "#{ARGV[0]}#{filename}"
     end
 
-    @codewriter = CodeWriter.new(ARGV[0] + 'output.asm')
+    output = ARGV[0].split('/').last
+    @codewriter = CodeWriter.new(ARGV[0] + output)
   end
 
   def translate
