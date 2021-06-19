@@ -97,7 +97,7 @@ class CodeWriter
     @file.puts "M=M-1"
     @file.puts "D=M"
     @file.puts "@#{segment}"
-    @file.puts "D;JNE"
+    @file.puts "D;JGT"
   end
 
   def write_call(command, segment, index)
