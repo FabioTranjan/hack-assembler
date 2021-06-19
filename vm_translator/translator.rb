@@ -28,6 +28,8 @@ class Translator
   	    @codewriter.write_function(command, segment, index)
       elsif command == OPERATIONS[:return]
   	    @codewriter.write_return(command, segment)
+      elsif command == OPERATIONS[:call]
+  	    @codewriter.write_call(command, segment, index)
       else
   	    @codewriter.write_push_pop(command, segment, index)
       end

@@ -50,8 +50,14 @@ class CodeWriter
 
   def write_goto(command, segment)
     log(command, segment)
+    @file.puts "@SP"
+    @file.puts "M=M-1"
+    @file.puts "A=M"
+    @file.puts "D=M"
     @file.puts "@#{segment}"
-    @file.puts "0;JEQ"
+    @file.puts "D;JEQ"
+    @file.puts "@SP"
+    @file.puts "M=M+1"
   end
 
   def write_if(command, segment)
@@ -83,6 +89,62 @@ class CodeWriter
     @file.puts "D=M"
     @file.puts "@#{segment}"
     @file.puts "D;JNE"
+  end
+
+  def write_call(command, segment, index)
+    log(command, segment, index)
+    @file.puts "@#{segment}_ret_#{@jmp_inc}"
+    @file.puts "D=A"
+    @file.puts "@SP"
+    @file.puts "A=M"
+    @file.puts "M=D"
+    @file.puts "@SP"
+    @file.puts "M=M+1"
+    @file.puts "@LCL"
+    @file.puts "D=A"
+    @file.puts "@SP"
+    @file.puts "A=M"
+    @file.puts "M=D"
+    @file.puts "@SP"
+    @file.puts "M=M+1"
+    @file.puts "@ARG"
+    @file.puts "D=A"
+    @file.puts "@SP"
+    @file.puts "A=M"
+    @file.puts "M=D"
+    @file.puts "@SP"
+    @file.puts "M=M+1"
+    @file.puts "@THIS"
+    @file.puts "D=A"
+    @file.puts "@SP"
+    @file.puts "A=M"
+    @file.puts "M=D"
+    @file.puts "@SP"
+    @file.puts "M=M+1"
+    @file.puts "@THAT"
+    @file.puts "D=A"
+    @file.puts "@SP"
+    @file.puts "A=M"
+    @file.puts "M=D"
+    @file.puts "@SP"
+    @file.puts "M=M+1"
+    @file.puts "@SP"
+    @file.puts "A=M"
+    @file.puts "D=M"
+    @file.puts "@5"
+    @file.puts "D=D-A"
+    @file.puts "@#{index}"
+    @file.puts "D=D-A"
+    @file.puts "@ARG"
+    @file.puts "M=D"
+    @file.puts "@SP"
+    @file.puts "D=M"
+    @file.puts "@LCL"
+    @file.puts "M=D"
+    @file.puts "@#{segment}"
+    @file.puts "0;JEQ"
+    @file.puts "(#{segment}_ret_#{@jmp_inc})"
+    @jmp_inc += 1
   end
 
   def write_return(command, segment)
