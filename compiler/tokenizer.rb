@@ -5,6 +5,8 @@ class String
 end
 
 class Tokenizer
+  COMMENT_DELIMITER = '//'
+
   KEYWORDS = [
     'class', 'constructor', 'function', 'method', 'field', 'static',
     'var', 'int', 'char', 'boolean', 'void', 'true', 'false', 'null',
@@ -17,7 +19,10 @@ class Tokenizer
   ].freeze
 
   def initialize(input_file)
-    input_data = File.read(input_file)
+    input_data = ''
+    File.open(input_file).each_line do |line|
+      input_data += line unless line[0..1] == COMMENT_DELIMITER
+    end
     @split_data = split_data(input_data)
     @index = 0
   end
