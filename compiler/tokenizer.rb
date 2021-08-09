@@ -28,7 +28,10 @@ class Tokenizer
   end
 
   def split_data(input_data)
-    input_data.split(/(\,)|(\.)|(\()|(\))|(;)|\s/).reject(&:empty?)
+    join_str = ''
+    should_join = false
+
+    input_data.split(/(\".*\")|(\[)|(\])|(\,)|(\.)|(\()|(\))|(;)|\s/).reject(&:empty?)
   end
 
   def current_token
