@@ -20,6 +20,11 @@ class Tokenizer
     input_data.split(/(\()|(\))|(;)|\s/).reject(&:empty?)
   end
 
+  def current_token
+    token = @split_data[@index]
+    parseToken(token)
+  end
+
   # Return: true/false
   def has_more_tokens
     !@split_data[@index + 1].nil?
@@ -29,57 +34,51 @@ class Tokenizer
     return unless has_more_tokens
 
     @index = @index + 1
-    @split_data[@index]
+    current_token
   end
 
   # Return
   # KEYWORD, SYMBOL, IDENTIFIER, INT_CONST, STRING_CONST
   def token_type
-    token = @split_data[@index]
-    tokenType(token)
+    tokenType(current_token).downcase
   end
 
   # Return
   # CLASS, METHOD, FUNCTION, CONSTRUCTOR, INT, BOOLEAN, CHAR, VOID,
   # VAR, STATIC, FIELD, LET, DO, IF, ELSE, WHILE, RETURN, TRUE,
   # FALSE, NULL, THIS
-  def keyWord
-    token = @split_data[@index]
-    return unless tokenType(token) == 'KEYWORD'
+  def key_word
+    return unless tokenType(current_token) == 'KEYWORD'
 
-    token.upcase
+    current_token
   end
 
   # Return: char
   def symbol
-    token = @split_data[@index]
-    return unless tokenType(token) == 'SYMBOL'
+    return unless tokenType(current_token) == 'SYMBOL'
 
-    token.to_s
+    current_token.to_s
   end
 
   # Return: string
   def identifier
-    token = @split_data[@index]
-    return unless tokenType(token) == 'IDENTIFIER'
+    return unless tokenType(current_token) == 'IDENTIFIER'
 
-    token.to_s
+    current_token.to_s
   end
 
   # Return: int
-  def intVal
-    token = @split_data[@index]
-    return unless tokenType(token) == 'INT_CONST'
+  def int_val
+    return unless tokenType(current_token) == 'INT_CONST'
 
-    token.to_i
+    current_token.to_i
   end
 
   # Return: string
-  def stringVal
-    token = @split_data[@index]
-    return unless tokenType(token) == 'STRING_CONST'
+  def string_val
+    return unless tokenType(current_token) == 'STRING_CONST'
 
-    token.to_s
+    current_token.to_s
   end
 
   def tokenType(token)
@@ -94,5 +93,14 @@ class Tokenizer
     else
       return 'IDENTIFIER'
     end
+  end
+
+  def parseToken(token)
+    return '&lt;' if token == '<'
+    return '&gt;' if token == '>'
+    return '&quot;' if token == '"'
+    return '&amp;' if token == '&'
+
+    token
   end
 end
