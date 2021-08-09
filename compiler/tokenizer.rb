@@ -31,7 +31,7 @@ class Tokenizer
     join_str = ''
     should_join = false
 
-    input_data.split(/(\".*\")|(\[)|(\])|(\,)|(\.)|(\()|(\))|(;)|\s/).reject(&:empty?)
+    input_data.split(/(\".*\")|(\[)|(\])|(\-)|(\,)|(\.)|(\()|(\))|(;)|\s/).reject(&:empty?)
   end
 
   def current_token
