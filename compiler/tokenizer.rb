@@ -1,3 +1,9 @@
+class String
+  def is_integer?
+    self.to_i.to_s == self
+  end
+end
+
 class Tokenizer
   KEYWORDS = [
     'class', 'constructor', 'function', 'method', 'field', 'static',
@@ -21,8 +27,21 @@ class Tokenizer
   end
 
   def current_token
-    token = @split_data[@index]
-    parseToken(token)
+    @split_data[@index] 
+  end
+
+   def parsed_token
+    if token_type == :keyword
+      keyword
+    elsif token_type == :symbol
+      symbol
+    elsif token_type == :identifier
+      identifier
+    elsif token_type == :integerConstant
+      int_val
+    elsif token_type == :stringConstant
+      string_val
+    end
   end
 
   # Return: true/false
@@ -40,67 +59,63 @@ class Tokenizer
   # Return
   # KEYWORD, SYMBOL, IDENTIFIER, INT_CONST, STRING_CONST
   def token_type
-    tokenType(current_token).downcase
+    tokenType(current_token)
   end
 
   # Return
   # CLASS, METHOD, FUNCTION, CONSTRUCTOR, INT, BOOLEAN, CHAR, VOID,
   # VAR, STATIC, FIELD, LET, DO, IF, ELSE, WHILE, RETURN, TRUE,
   # FALSE, NULL, THIS
-  def key_word
-    return unless tokenType(current_token) == 'KEYWORD'
+  def keyword
+    return unless token_type == :keyword
 
     current_token
   end
 
   # Return: char
   def symbol
-    return unless tokenType(current_token) == 'SYMBOL'
+    return unless token_type == :symbol
+
+    return '&lt;' if current_token == '<'
+    return '&gt;' if current_token == '>'
+    return '&quot;' if current_token == '"'
+    return '&amp;' if current_token == '&'
 
     current_token.to_s
   end
 
   # Return: string
   def identifier
-    return unless tokenType(current_token) == 'IDENTIFIER'
+    return unless token_type == :identifier
 
     current_token.to_s
   end
 
   # Return: int
   def int_val
-    return unless tokenType(current_token) == 'INT_CONST'
+    return unless token_type == :integerConstant
 
     current_token.to_i
   end
 
   # Return: string
   def string_val
-    return unless tokenType(current_token) == 'STRING_CONST'
+    return unless token_type == :stringConstant
 
-    current_token.to_s
+    current_token.to_s[1..-2]
   end
 
   def tokenType(token)
-    if token.is_a? Integer
-      return 'INT_CONST'
+    if token.is_integer?
+      return :integerConstant
     elsif token.slice(0) == '"' && token.slice(-1) == '"'
-      return 'STRING_CONST'
+      return :stringConstant
     elsif KEYWORDS.include? token
-      return 'KEYWORD'
+      return :keyword
     elsif SYMBOLS.include? token
-      return 'SYMBOL'
+      return :symbol
     else
-      return 'IDENTIFIER'
+      return :identifier
     end
-  end
-
-  def parseToken(token)
-    return '&lt;' if token == '<'
-    return '&gt;' if token == '>'
-    return '&quot;' if token == '"'
-    return '&amp;' if token == '&'
-
-    token
   end
 end

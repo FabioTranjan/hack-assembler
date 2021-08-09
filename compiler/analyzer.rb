@@ -18,7 +18,7 @@ class Analyzer
 
   def write_token
     @output_file.write("<#{@tokenizer.token_type}>")
-    @output_file.write(" #{@tokenizer.current_token} ")
+    @output_file.write(" #{@tokenizer.parsed_token} ")
     @output_file.write("</#{@tokenizer.token_type}>\n")
   end
 end
