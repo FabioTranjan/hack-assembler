@@ -5,7 +5,7 @@ class String
 end
 
 class Tokenizer
-  COMMENT_DELIMITER = '//'
+  COMMENT_DELIMITERS = ['//', '/*', '*/']
 
   KEYWORDS = [
     'class', 'constructor', 'function', 'method', 'field', 'static',
@@ -21,14 +21,14 @@ class Tokenizer
   def initialize(input_file)
     input_data = ''
     File.open(input_file).each_line do |line|
-      input_data += line unless line[0..1] == COMMENT_DELIMITER
+      input_data += line unless COMMENT_DELIMITERS.include?(line[0..1])
     end
     @split_data = split_data(input_data)
     @index = 0
   end
 
   def split_data(input_data)
-    input_data.split(/(\()|(\))|(;)|\s/).reject(&:empty?)
+    input_data.split(/(\,)|(\.)|(\()|(\))|(;)|\s/).reject(&:empty?)
   end
 
   def current_token
