@@ -42,7 +42,7 @@ describe Tokenizer do
 
     context "when parsing an integer constant" do
       it "returns INT_CONST" do
-        expect(@tokenizer.tokenType(1)).to eq(:integerConstant)
+        expect(@tokenizer.tokenType('1')).to eq(:integerConstant)
       end
     end
 
