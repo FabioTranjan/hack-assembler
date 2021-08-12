@@ -5,6 +5,8 @@ class String
 end
 
 class Tokenizer
+  attr_accessor :split_data
+
   COMMENT_DELIMITERS = ['//', '/*', '*/']
 
   KEYWORDS = [
@@ -23,11 +25,11 @@ class Tokenizer
     File.open(input_file).each_line do |line|
       input_data += line unless COMMENT_DELIMITERS.include?(line[0..1])
     end
-    @split_data = split_data(input_data)
+    @split_data = split(input_data)
     @index = 0
   end
 
-  def split_data(input_data)
+  def split(input_data)
     join_str = ''
     should_join = false
 

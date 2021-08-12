@@ -1,12 +1,16 @@
 require './tokenizer'
+require './compilation_engine'
 
 class Analyzer
   def initialize
     @tokenizer = Tokenizer.new(ARGV[0])
+    @compilation_engine = CompilationEngine.new(@tokenizer)
     @output_file = File.open('./test.xml', 'w')
   end
 
-  def run
+
+
+  def write_tokenized_file
     @output_file.write("<tokens>\n")
     write_token 
     while @tokenizer.has_more_tokens
