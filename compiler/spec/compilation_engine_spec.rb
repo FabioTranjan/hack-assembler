@@ -28,7 +28,7 @@ describe Tokenizer do
     end
   end
 
-  context "when compiling a valid if statement" do
+  describe "#compile_if" do
     let(:tokenizer) { Tokenizer.new('./fixture/empty_file') }
     let(:compilation_engine) { CompilationEngine.new(tokenizer) }
 
@@ -78,7 +78,7 @@ describe Tokenizer do
     end
   end
 
-  context "when compiling a valid let statement" do
+  describe "#compile_let" do
     let(:tokenizer) { Tokenizer.new('./fixture/empty_file') }
     let(:compilation_engine) { CompilationEngine.new(tokenizer) }
 
@@ -119,6 +119,47 @@ describe Tokenizer do
             "<symbol> = </symbol>\r\n",
             "<symbol> ; </symbol>\r\n",
             "</letStatement>\r\n"
+          ]
+        )
+      end
+    end
+  end
+
+  describe "#compile_return" do
+    let(:tokenizer) { Tokenizer.new('./fixture/empty_file') }
+    let(:compilation_engine) { CompilationEngine.new(tokenizer) }
+
+    context 'when compiling a pure return clause' do
+      before do
+        tokenizer.split_data = ['return', ';']
+        compilation_engine.compile_return
+      end
+
+      it "prints a full return statement" do
+        expect(compilation_engine.output_data).to eq(
+          [
+            "<returnStatement>\r\n",
+            "<keyword> return </keyword>\r\n",
+            "<symbol> ; </symbol>\r\n",
+            "</returnStatement>\r\n"
+          ]
+        )
+      end
+    end
+
+    context 'when compiling a return clause with an expression' do
+      before do
+        tokenizer.split_data = ['return', 'expression', ';']
+        compilation_engine.compile_return
+      end
+
+      it "prints a full return statement" do
+        expect(compilation_engine.output_data).to eq(
+          [
+            "<returnStatement>\r\n",
+            "<keyword> return </keyword>\r\n",
+            "<symbol> ; </symbol>\r\n",
+            "</returnStatement>\r\n"
           ]
         )
       end

@@ -78,6 +78,13 @@ class CompilationEngine
   end
 
   def compile_return
+    printXML('<returnStatement>')
+    process('return')
+    if @tokenizer.current_token != ';'
+      compile_expression
+    end
+    process(';')
+    printXML('</returnStatement>')
   end
 
   def compile_expression
