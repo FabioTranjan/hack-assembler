@@ -1,6 +1,8 @@
 class CompilationEngine
   attr_reader :output_data
 
+  STATEMENTS = ['let', 'if', 'while', 'do', 'return']
+
   def initialize(tokenizer)
     @tokenizer = tokenizer
     @output_data = []
@@ -27,7 +29,25 @@ class CompilationEngine
   end
 
   def compile_statements
-    @tokenizer.advance
+    return unless STATEMENTS.include?(@tokenizer.current_token)
+
+    compile_statement
+    compile_statements
+  end
+
+  def compile_statement
+    case @tokenizer.current_token
+    when 'let'
+      compile_let
+    when 'if'
+      compile_if
+    when 'while'
+      compile_while
+    when 'do'
+      compile_do
+    when 'return'
+      compile_return
+    end
   end
 
   def compile_let
