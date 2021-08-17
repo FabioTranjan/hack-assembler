@@ -33,6 +33,21 @@ class CompilationEngine
   end
 
   def compile_if
+    printXML('<ifStatement>')
+    process('if')
+    process('(')
+    compile_expression
+    process(')')
+    process('{')
+    compile_statements
+    process('}')
+    if @tokenizer.current_token == 'else'
+      process('else')
+      process('{')
+      compile_statements
+      process('}')     
+    end
+    printXML('</ifStatement>')
   end
 
   def compile_while
