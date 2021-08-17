@@ -77,4 +77,51 @@ describe Tokenizer do
       end
     end
   end
+
+  context "when compiling a valid let statement" do
+    let(:tokenizer) { Tokenizer.new('./fixture/empty_file') }
+    let(:compilation_engine) { CompilationEngine.new(tokenizer) }
+
+    context 'when compiling a let clause without []' do
+      before do
+        tokenizer.split_data = ['let', 'varName', '=', 'expression', ';']
+        compilation_engine.compile_let
+      end
+
+      it "prints a full let statement" do
+        expect(compilation_engine.output_data).to eq(
+          [
+            "<letStatement>\r\n",
+            "<keyword> let </keyword>\r\n",
+            "<identifier> varName </identifier>\r\n",
+            "<symbol> = </symbol>\r\n",
+            "<symbol> ; </symbol>\r\n",
+            "</letStatement>\r\n"
+          ]
+        )
+      end
+    end
+
+    context 'when compiling a let clause with []' do
+      before do
+        tokenizer.split_data = ['let', 'varName', '[', 'expression', ']', '=', 'expression', ';']
+        compilation_engine.compile_let
+      end
+
+      it "prints a full let statement" do
+        expect(compilation_engine.output_data).to eq(
+          [
+            "<letStatement>\r\n",
+            "<keyword> let </keyword>\r\n",
+            "<identifier> varName </identifier>\r\n",
+            "<symbol> [ </symbol>\r\n",
+            "<symbol> ] </symbol>\r\n",
+            "<symbol> = </symbol>\r\n",
+            "<symbol> ; </symbol>\r\n",
+            "</letStatement>\r\n"
+          ]
+        )
+      end
+    end
+  end
 end

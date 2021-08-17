@@ -30,6 +30,18 @@ class CompilationEngine
   end
 
   def compile_let
+    printXML('<letStatement>')
+    process('let')
+    process(@tokenizer.current_token)
+    if @tokenizer.current_token == '['
+      process('[')
+      compile_expression
+      process(']')
+    end
+    process('=')
+    compile_expression
+    process(';')
+    printXML('</letStatement>')
   end
 
   def compile_if
