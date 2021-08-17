@@ -14,6 +14,7 @@ class CompilationEngine
   end
 
   def compile_subroutine
+    @tokenizer.advance
   end
 
   def compile_parameter_list
@@ -75,6 +76,11 @@ class CompilationEngine
   end
 
   def compile_do
+    printXML('<doStatement>')
+    process('do')
+    compile_subroutine
+    process(';')
+    printXML('</doStatement>')
   end
 
   def compile_return

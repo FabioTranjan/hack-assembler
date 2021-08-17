@@ -165,4 +165,27 @@ describe Tokenizer do
       end
     end
   end
+
+  describe "#compile_do" do
+    context "when compiling a valid do statement" do
+      let(:tokenizer) { Tokenizer.new('./fixture/empty_file') }
+      let(:compilation_engine) { CompilationEngine.new(tokenizer) }
+
+      before do
+        tokenizer.split_data = ['do', 'subroutine', ';']
+        compilation_engine.compile_do
+      end
+
+      it "prints a full do statement" do
+        expect(compilation_engine.output_data).to eq(
+          [
+            "<doStatement>\r\n",
+            "<keyword> do </keyword>\r\n",
+            "<symbol> ; </symbol>\r\n",
+            "</doStatement>\r\n"
+          ]
+        )
+      end
+    end
+  end
 end
