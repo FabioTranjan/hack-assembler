@@ -1,4 +1,0 @@
-// Comments
-if (x < 0) {
-  let quit = "yes";
-}

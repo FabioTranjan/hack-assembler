@@ -327,4 +327,55 @@ describe Tokenizer do
       end
     end
   end
+
+  describe "#compile_statements" do
+    let(:tokenizer) { Tokenizer.new('./fixture/empty_file') }
+    let(:compilation_engine) { CompilationEngine.new(tokenizer) }
+
+    context 'when compiling a single let clause' do
+      before do
+        tokenizer.split_data = ['let', 'varName', '=', 'expression', ';']
+        compilation_engine.compile_statements
+      end
+
+      it "prints a full let statement" do
+        expect(compilation_engine.output_data).to eq(
+          [
+            "<letStatement>\r\n",
+            "<keyword> let </keyword>\r\n",
+            "<identifier> varName </identifier>\r\n",
+            "<symbol> = </symbol>\r\n",
+            "<symbol> ; </symbol>\r\n",
+            "</letStatement>\r\n"
+          ]
+        )
+      end
+    end
+
+    context 'when compiling multiple let clauses' do
+      before do
+        tokenizer.split_data = ['let', 'varName', '=', 'expression', ';', 'let', 'varName', '=', 'expression', ';']
+        compilation_engine.compile_statements
+      end
+
+      it "prints a full let statement" do
+        expect(compilation_engine.output_data).to eq(
+          [
+            "<letStatement>\r\n",
+            "<keyword> let </keyword>\r\n",
+            "<identifier> varName </identifier>\r\n",
+            "<symbol> = </symbol>\r\n",
+            "<symbol> ; </symbol>\r\n",
+            "</letStatement>\r\n",
+            "<letStatement>\r\n",
+            "<keyword> let </keyword>\r\n",
+            "<identifier> varName </identifier>\r\n",
+            "<symbol> = </symbol>\r\n",
+            "<symbol> ; </symbol>\r\n",
+            "</letStatement>\r\n"
+          ]
+        )
+      end
+    end
+  end
 end
