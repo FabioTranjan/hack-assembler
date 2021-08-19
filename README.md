@@ -20,7 +20,11 @@
 - The Hack Assembler serves to get assembly code (ASM) as input and convert it to machine code (binary) for the Hack computer architecture.
 - How to use: run the script: `ruby assembler.rb input.asm output.hack`
 
-### Virtual Machine translator
+### Virtual Machine
 - The VM Translator serves to get vm code (VM) as input and convert it to assembly code (ASM) for the Hack computer architecture.
 - This is a stack-based machine, basically it's an intermediate between the compiler and the assembler.
 - How to use: run the script: `ruby translator.rb input.vm output.asm`
+
+### Compiler
+- The Compiler serves to convert high-level code to vm code.
+- How to use: run the script: `ruby compile.rb input.jack output.vm`
