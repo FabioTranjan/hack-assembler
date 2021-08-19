@@ -26,6 +26,16 @@ class CompilationEngine
   end
 
   def compile_var_dec
+    printXML('<varDec>')
+    process('var')
+    process(@tokenizer.current_token)
+    process(@tokenizer.current_token)
+    while @tokenizer.current_token == ','
+      process(',')
+      process(@tokenizer.current_token)
+    end
+    process(';')
+    printXML('</varDec>')
   end
 
   def compile_statements

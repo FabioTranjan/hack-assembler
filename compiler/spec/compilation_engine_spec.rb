@@ -378,4 +378,54 @@ describe Tokenizer do
       end
     end
   end
+
+  describe "#compile_var_dec" do
+    context "when compiling a single varDec statement" do
+      let(:tokenizer) { Tokenizer.new('./fixture/empty_file') }
+      let(:compilation_engine) { CompilationEngine.new(tokenizer) }
+
+      before do
+        tokenizer.split_data = ['var', 'Array', 'a', ';']
+        compilation_engine.compile_var_dec
+      end
+
+      it "prints a full varDec statement" do
+        expect(compilation_engine.output_data).to eq(
+          [
+            "<varDec>\r\n",
+            "<keyword> var </keyword>\r\n",
+            "<identifier> Array </identifier>\r\n",
+            "<identifier> a </identifier>\r\n",
+            "<symbol> ; </symbol>\r\n",
+            "</varDec>\r\n"
+          ]
+        )
+      end
+    end
+
+    context "when compiling multiple varDec statement" do
+      let(:tokenizer) { Tokenizer.new('./fixture/empty_file') }
+      let(:compilation_engine) { CompilationEngine.new(tokenizer) }
+
+      before do
+        tokenizer.split_data = ['var', 'int', 'i', ',', 'sum', ';']
+        compilation_engine.compile_var_dec
+      end
+
+      it "prints a full varDec statement" do
+        expect(compilation_engine.output_data).to eq(
+          [
+            "<varDec>\r\n",
+            "<keyword> var </keyword>\r\n",
+            "<keyword> int </keyword>\r\n",
+            "<identifier> i </identifier>\r\n",
+            "<symbol> , </symbol>\r\n",
+            "<identifier> sum </identifier>\r\n",
+            "<symbol> ; </symbol>\r\n",
+            "</varDec>\r\n"
+          ]
+        )
+      end
+    end
+  end
 end
