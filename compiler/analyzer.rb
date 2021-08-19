@@ -8,8 +8,6 @@ class Analyzer
     @output_file = File.open('./test.xml', 'w')
   end
 
-
-
   def write_tokenized_file
     @output_file.write("<tokens>\n")
     write_token 
