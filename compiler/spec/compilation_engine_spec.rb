@@ -428,4 +428,76 @@ describe Tokenizer do
       end
     end
   end
+
+  describe "#compile_parameter_list" do
+    context "when compiling parameterList statement with no args" do
+      let(:tokenizer) { Tokenizer.new('./fixture/empty_file') }
+      let(:compilation_engine) { CompilationEngine.new(tokenizer) }
+
+      before do
+        tokenizer.split_data = ['(', ')']
+        compilation_engine.compile_parameter_list
+      end
+
+      it "prints an empty parameterList statement" do
+        expect(compilation_engine.output_data).to eq(
+          [
+            "<symbol> ( </symbol>\r\n",
+            "<parameterList>\r\n",
+            "</parameterList>\r\n",
+            "<symbol> ) </symbol>\r\n"
+          ]
+        )
+      end
+    end
+
+    context "when compiling parameterList statement with one args" do
+      let(:tokenizer) { Tokenizer.new('./fixture/empty_file') }
+      let(:compilation_engine) { CompilationEngine.new(tokenizer) }
+
+      before do
+        tokenizer.split_data = ['(', 'int', 'x', ')']
+        compilation_engine.compile_parameter_list
+      end
+
+      it "prints an empty parameterList statement" do
+        expect(compilation_engine.output_data).to eq(
+          [
+            "<symbol> ( </symbol>\r\n",
+            "<parameterList>\r\n",
+            "<keyword> int </keyword>\r\n",
+            "<identifier> x </identifier>\r\n",
+            "</parameterList>\r\n",
+            "<symbol> ) </symbol>\r\n"
+          ]
+        )
+      end
+    end
+
+    context "when compiling parameterList statement with multiple args" do
+      let(:tokenizer) { Tokenizer.new('./fixture/empty_file') }
+      let(:compilation_engine) { CompilationEngine.new(tokenizer) }
+
+      before do
+        tokenizer.split_data = ['(', 'int', 'x', ',', 'int', 'y', ')']
+        compilation_engine.compile_parameter_list
+      end
+
+      it "prints an empty parameterList statement" do
+        expect(compilation_engine.output_data).to eq(
+          [
+            "<symbol> ( </symbol>\r\n",
+            "<parameterList>\r\n",
+            "<keyword> int </keyword>\r\n",
+            "<identifier> x </identifier>\r\n",
+            "<symbol> , </symbol>\r\n",
+            "<keyword> int </keyword>\r\n",
+            "<identifier> y </identifier>\r\n",
+            "</parameterList>\r\n",
+            "<symbol> ) </symbol>\r\n"
+          ]
+        )
+      end
+    end
+  end
 end

@@ -20,6 +20,15 @@ class CompilationEngine
   end
 
   def compile_parameter_list
+    process('(')
+    printXML('<parameterList>')
+    while @tokenizer.current_token != ')'
+      process(@tokenizer.current_token)
+      process(@tokenizer.current_token)
+      process(',') if @tokenizer.current_token == ','
+    end
+    printXML('</parameterList>')
+    process(')')
   end
 
   def compile_subroutine_body
