@@ -10,17 +10,64 @@ class CompilationEngine
   end
 
   def compile_class
+    printXML('<class>')
+    process('class')
+    process(@tokenizer.current_token)
+    process('{')
+    while @tokenizer.current_token == 'var'
+      compile_var_dec
+    end
+    while @tokenizer.current_token == ''
+      compile_subroutine_dec
+    end
+    process('}')
+    printXML('</class>')
   end
 
   def compile_class_var_dec
+    printXML('<classVarDec>')
+    process('static') if @tokenizer.current_token == 'static'
+    process('field') if @tokenizer.current_token == 'field'
+    process(@tokenizer.current_token)
+    process(@tokenizer.current_token)
+    while @tokenizer.current_token == ','
+      process(',')
+      process(@tokenizer.current_token)
+    end
+    process(';')
+    printXML('</classVarDec>')
   end
 
-  def compile_subroutine
+  def compile_subroutine_call
+    printXML('<subroutineCall>')
+    process('(')
+    compile_expression_list
+    process(')')
+    process(@tokenizer.current_token)
+    process('.')
+    process(@tokenizer.current_token)
+    process('(')
+    compile_expression_list
+    process(')')
+    printXML('</subroutineCall>')
+  end
+
+  def compile_subroutine_dec
+    printXML('<subroutineDec>')
+    process('constructor') if @tokenizer.current_token == 'constructor'
+    process('function') if @tokenizer.current_token == 'function'
+    process('method') if @tokenizer.current_token == 'method'
+    process(@tokenizer.current_token)
+    process(@tokenizer.current_token)
+    process('(')
+    compile_parameter_list
+    process(')')
+    compile_subroutine_body
     @tokenizer.advance
+    printXML('</subroutineDec>')
   end
 
   def compile_parameter_list
-    process('(')
     printXML('<parameterList>')
     while @tokenizer.current_token != ')'
       process(@tokenizer.current_token)
@@ -28,10 +75,17 @@ class CompilationEngine
       process(',') if @tokenizer.current_token == ','
     end
     printXML('</parameterList>')
-    process(')')
   end
 
   def compile_subroutine_body
+    printXML('<subroutineBody>')
+    print('{')
+    while @tokenizer.current_token == 'var'
+      compile_var_dec
+    end
+    compile_statements
+    print('}')
+    printXML('</subroutineBody>')
   end
 
   def compile_var_dec
@@ -45,28 +99,6 @@ class CompilationEngine
     end
     process(';')
     printXML('</varDec>')
-  end
-
-  def compile_statements
-    return unless STATEMENTS.include?(@tokenizer.current_token)
-
-    compile_statement
-    compile_statements
-  end
-
-  def compile_statement
-    case @tokenizer.current_token
-    when 'let'
-      compile_let
-    when 'if'
-      compile_if
-    when 'while'
-      compile_while
-    when 'do'
-      compile_do
-    when 'return'
-      compile_return
-    end
   end
 
   def compile_let
@@ -117,7 +149,7 @@ class CompilationEngine
   def compile_do
     printXML('<doStatement>')
     process('do')
-    compile_subroutine
+    compile_subroutine_call
     process(';')
     printXML('</doStatement>')
   end
@@ -132,14 +164,54 @@ class CompilationEngine
     printXML('</returnStatement>')
   end
 
+
   def compile_expression
-    @tokenizer.advance
+    compile_term
+    op = ['+', '-', '*', '/', '&', '|', '<', '>', '=']
+    while op.include?(@tokenizer.current_token)
+      process(@tokenizer.current_token)
+      compile_term
+    end
   end
 
   def compile_term
+    return compile_expression if @tokenizer.current_token == '('
+    process(@tokenizer.current_token)
+    if @tokenizer.current_token == '['
+      process('[')
+      compile_expression
+      process(']')
+    end
   end
 
   def compile_expression_list
+    compile_expression
+    while @tokenizer.current_token == ','
+      process(',')
+      compile_expression
+    end
+  end
+
+  def compile_statements
+    return unless STATEMENTS.include?(@tokenizer.current_token)
+
+    compile_statement
+    compile_statements
+  end
+
+  def compile_statement
+    case @tokenizer.current_token
+    when 'let'
+      compile_let
+    when 'if'
+      compile_if
+    when 'while'
+      compile_while
+    when 'do'
+      compile_do
+    when 'return'
+      compile_return
+    end
   end
 
   def process(token)
