@@ -8,6 +8,16 @@ class Analyzer
     @output_file = File.open('./test.xml', 'w')
   end
 
+  def run
+    while @tokenizer.has_more_tokens
+      if @tokenizer.current_token == 'class'
+        @compilation_engine.compile_class
+      else
+        @tokenizer.advance
+      end
+    end
+  end
+
   def write_tokenized_file
     @output_file.write("<tokens>\n")
     write_token 

@@ -37,10 +37,14 @@ class Tokenizer
   end
 
   def current_token
-    @split_data[@index] 
+    @split_data[@index]
   end
 
-   def parsed_token
+  def next_token
+    @split_data[@index + 1]
+  end
+
+  def parsed_token
     if token_type == :keyword
       keyword
     elsif token_type == :symbol
