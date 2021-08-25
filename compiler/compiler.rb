@@ -1,7 +1,7 @@
 require './tokenizer'
 require './compilation_engine'
 
-class Analyzer
+class Compiler
   def initialize
     @tokenizer = Tokenizer.new(ARGV[0])
     @compilation_engine = CompilationEngine.new(@tokenizer)
@@ -35,5 +35,5 @@ class Analyzer
   end
 end
 
-analyzer = Analyzer.new
-analyzer.run
+compiler = Compiler.new
+compiler.run
