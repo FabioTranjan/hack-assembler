@@ -1,10 +1,15 @@
 require './tokenizer'
+require './vm_writer'
+require './symbol_table'
 require './compilation_engine'
 
 class Compiler
   def initialize
     @tokenizer = Tokenizer.new(ARGV[0])
-    @compilation_engine = CompilationEngine.new(@tokenizer)
+    @class_symbol_table = SymbolTable.new
+    @subroutine_symbol_table = SymbolTable.new
+    @vm_writer = VMWriter.new
+    @compilation_engine = CompilationEngine.new(@tokenizer, @vm_writer, print_xml: true)
     @output_file = File.open('./test.xml', 'w')
   end
 
@@ -16,22 +21,6 @@ class Compiler
         @tokenizer.advance
       end
     end
-  end
-
-  def write_tokenized_file
-    @output_file.write("<tokens>\n")
-    write_token 
-    while @tokenizer.has_more_tokens
-      @tokenizer.advance
-      write_token
-    end
-    @output_file.write("</tokens>\n")
-  end
-
-  def write_token
-    @output_file.write("<#{@tokenizer.token_type}>")
-    @output_file.write(" #{@tokenizer.parsed_token} ")
-    @output_file.write("</#{@tokenizer.token_type}>\n")
   end
 end
 

@@ -3,9 +3,11 @@ class CompilationEngine
 
   STATEMENTS = ['let', 'if', 'while', 'do', 'return']
 
-  def initialize(tokenizer)
+  def initialize(tokenizer, vm_writer, print_xml: false)
     @tokenizer = tokenizer
+    @vm_writer = vm_writer
     @identation = 0
+    @print_xml = print_xml
     @output_data = []
     @output_file = File.open('test.xml', 'w')
   end
@@ -14,7 +16,8 @@ class CompilationEngine
     printXML('<class>')
     @identation += 2
     process('class')
-    process(@tokenizer.current_token)
+    @class_name = @tokenizer.current_token
+    process(@class_name)
     process('{')
     while ['static','field'].include?(@tokenizer.current_token)
       compile_class_var_dec
@@ -23,6 +26,7 @@ class CompilationEngine
       compile_subroutine_dec
     end
     process('}')
+    @vm_writer.close
     @identation -= 2
     printXML('</class>')
   end
@@ -46,10 +50,12 @@ class CompilationEngine
   def compile_subroutine_call
     if @tokenizer.current_token == '.'
       process('.')
-      process(@tokenizer.current_token)
+      function_name = @tokenizer.current_token
+      process(function_name)
       process('(')
       compile_expression_list
       process(')')
+      @vm_writer.write_call("#{@do_class}.#{function_name}", 1)
     else
       process('(')
       compile_expression_list
@@ -64,19 +70,23 @@ class CompilationEngine
     process('function') if @tokenizer.current_token == 'function'
     process('method') if @tokenizer.current_token == 'method'
     process(@tokenizer.current_token)
-    process(@tokenizer.current_token)
+    function_name = @tokenizer.current_token
+    process(function_name)
     process('(')
     compile_parameter_list
     process(')')
+    @vm_writer.write_function("#{@class_name}.#{function_name}", @parameter_list_length)
     compile_subroutine_body
     @identation -= 2
     printXML('</subroutineDec>')
   end
 
   def compile_parameter_list
+    @parameter_list_length = 0
     printXML('<parameterList>')
     @identation += 2
     while @tokenizer.current_token != ')'
+      @parameter_list_length += 1
       process(@tokenizer.current_token)
       process(@tokenizer.current_token)
       process(',') if @tokenizer.current_token == ','
@@ -168,7 +178,8 @@ class CompilationEngine
     printXML('<doStatement>')
     @identation += 2
     process('do')
-    process(@tokenizer.current_token)
+    @do_class = @tokenizer.current_token
+    process(@do_class)
     compile_subroutine_call
     process(';')
     @identation -= 2
@@ -183,6 +194,7 @@ class CompilationEngine
       compile_expression
     end
     process(';')
+    @vm_writer.write_return
     @identation -= 2
     printXML('</returnStatement>')
   end
@@ -192,13 +204,17 @@ class CompilationEngine
     printXML('<expression>')
     @identation += 2
 
+    op_list = []
     compile_term
     op = ['+', '-', '*', '/', '&', '|', '<', '>', '=']
     while op.include?(@tokenizer.current_token)
+      op_list << @tokenizer.current_token
       printXMLToken(@tokenizer.symbol)
       @tokenizer.advance
       compile_term
     end
+
+    op_list.reverse.each { |op| @vm_writer.write_arithmetic(op) }
 
     @identation -= 2
     printXML('</expression>')
@@ -229,6 +245,7 @@ class CompilationEngine
       printXMLToken(@tokenizer.string_val)
       @tokenizer.advance
     else
+      @vm_writer.write_push('const', @tokenizer.current_token)
       process(@tokenizer.current_token)
     end
 
@@ -310,6 +327,8 @@ class CompilationEngine
   end
 
   def printXML(str)
+    return unless @print_xml
+
     printIdentation
     @output_data << "#{str}\r\n"
     @output_file.write("#{str}\r\n")
