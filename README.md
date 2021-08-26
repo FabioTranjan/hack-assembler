@@ -26,5 +26,7 @@
 - How to use: run the script: `ruby translator.rb input.vm output.asm`
 
 ### Compiler
-- The Compiler serves to convert high-level code to vm code.
-- How to use: run the script: `ruby compile.rb input.jack output.vm`
+- The Compiler serves to convert high-level code to vm code, it's divided in two parts
+- The first part parses the high-level code, it converts semantic declarations into tokens (Tokenizer), then it organizer the tokens into languague grammar (CompilationEngine).
+- The second part uses the tokenized grammar code into VM code, using VMWriter and SymbolTable to store the variables.
+- How to use: run the script: `ruby compiler.rb input.jack output.vm`
