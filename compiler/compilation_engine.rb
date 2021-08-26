@@ -204,17 +204,14 @@ class CompilationEngine
     printXML('<expression>')
     @identation += 2
 
-    op_list = []
     compile_term
     op = ['+', '-', '*', '/', '&', '|', '<', '>', '=']
     while op.include?(@tokenizer.current_token)
-      op_list << @tokenizer.current_token
+      @expression << "#{@tokenizer.current_token} " if @expression
       printXMLToken(@tokenizer.symbol)
       @tokenizer.advance
       compile_term
     end
-
-    op_list.reverse.each { |op| @vm_writer.write_arithmetic(op) }
 
     @identation -= 2
     printXML('</expression>')
@@ -245,7 +242,7 @@ class CompilationEngine
       printXMLToken(@tokenizer.string_val)
       @tokenizer.advance
     else
-      @vm_writer.write_push('const', @tokenizer.current_token)
+      @expression << "#{@tokenizer.current_token} " if @expression
       process(@tokenizer.current_token)
     end
 
@@ -271,7 +268,9 @@ class CompilationEngine
     @identation += 2
 
     if @tokenizer.current_token != ')'
+      @expression = ""
       compile_expression
+      @vm_writer.write_expression(@expression[0..-2])
       while @tokenizer.current_token == ','
         process(',')
         compile_expression

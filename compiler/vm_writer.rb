@@ -71,8 +71,36 @@ class VMWriter
 		write_push('const', 0)
     @output_file.write("return\n")
   end
+
+  def write_expression(exp)
+    return write_push('const', exp) if is_integer?(exp)
+
+    # ToDo: check if exp is a var
+
+    # ToDo: check if exp is a func
+
+    exp_list = exp.split(' ', 3)
+
+    if exp_list.length == 3
+      write_expression(exp_list[0])
+      write_expression(exp_list[2])
+      write_arithmetic(exp_list[1])
+      return
+    end
+
+    if exp_list.length == 2
+      write_expression(exp_list[1])
+      write_arithmetic(exp_list[0])
+    end
+  end
   
   def close
   	@output_file.close
+  end
+
+  private
+
+  def is_integer?(exp)
+    exp.to_i.to_s == exp
   end
 end
