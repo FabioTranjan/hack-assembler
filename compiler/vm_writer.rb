@@ -2,7 +2,11 @@ require './tokenizer'
 require './compilation_engine'
 
 class VMWriter
+  attr_accessor :class_symbol_table, :subroutine_symbol_table
+
   def initialize
+    @class_symbol_table = SymbolTable.new
+    @subroutine_symbol_table = SymbolTable.new
     @output_file = File.open('test.vm', 'w')
   end
  

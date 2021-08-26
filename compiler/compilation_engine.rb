@@ -55,7 +55,7 @@ class CompilationEngine
       process('(')
       compile_expression_list
       process(')')
-      @vm_writer.write_call("#{@do_class}.#{function_name}", 1)
+      @vm_writer.write_call("#{@do_class}.#{function_name}", @expression_length)
     else
       process('(')
       compile_expression_list
@@ -112,11 +112,16 @@ class CompilationEngine
     printXML('<varDec>')
     @identation += 2
     process('var')
+    var_type = @tokenizer.current_token
+    process(var_type)
+    var_name = @tokenizer.current_token
     process(@tokenizer.current_token)
-    process(@tokenizer.current_token)
+    @vm_writer.subroutine_symbol_table.define(var_name, var_type, 'local')
     while @tokenizer.current_token == ','
       process(',')
+      var_name = @tokenizer.current_token
       process(@tokenizer.current_token)
+      @vm_writer.subroutine_symbol_table.define(var_name, var_type, 'local')
     end
     process(';')
     @identation -= 2
@@ -195,6 +200,7 @@ class CompilationEngine
     end
     process(';')
     @vm_writer.write_return
+    @vm_writer.subroutine_symbol_table.reset
     @identation -= 2
     printXML('</returnStatement>')
   end
@@ -243,6 +249,7 @@ class CompilationEngine
       @tokenizer.advance
     else
       @expression << "#{@tokenizer.current_token} " if @expression
+      @expression_length += 1 if @expression_length
       process(@tokenizer.current_token)
     end
 
@@ -269,11 +276,14 @@ class CompilationEngine
 
     if @tokenizer.current_token != ')'
       @expression = ""
+      @expression_length = 0
       compile_expression
       @vm_writer.write_expression(@expression[0..-2])
       while @tokenizer.current_token == ','
         process(',')
+        @expression = ""
         compile_expression
+        @vm_writer.write_expression(@expression[0..-2])
       end
     end
 
